@@ -56,13 +56,14 @@ func SeverProcessMes(c net.Conn) {
 
 		switch mes.Type {
 		case model.NotifyUserStatusMesType:
-			var notifyUserStatusMes *model.NotifyUserStatusMes
+			var notifyUserStatusMes model.NotifyUserStatusMes
 			// time.Sleep(10 * time.Second)
-			err = json.Unmarshal([]byte(mes.Data), notifyUserStatusMes)
+			err = json.Unmarshal([]byte(mes.Data), &notifyUserStatusMes)
 			if err != nil {
 				fmt.Println("json.Unmarshal err =", err)
+				return
 			}
-			UpdateUserStatus(notifyUserStatusMes)
+			UpdateUserStatus(&notifyUserStatusMes)
 			OutPutOnlineUser()
 		case model.SmsMesType:
 			OutputGroupMes(&mes)

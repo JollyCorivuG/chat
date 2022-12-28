@@ -1,6 +1,7 @@
 package processor
 
 import (
+	"encoding/json"
 	"fmt"
 	"go_web/chat/model"
 	"go_web/chat/utils"
@@ -17,14 +18,20 @@ func (this *MainProcess) SeverProcessMes(mes *model.Message) (err error) {
 	switch mes.Type {
 	case model.LoginMesType:
 		// 处理登录
+		var loginmes model.LoginMes
+		json.Unmarshal([]byte(mes.Data), &loginmes)
 		up := &UserProcess{
 			C: this.C,
+			UserId: loginmes.UserId,
 		}
 		err = up.SeverProcessLogin(mes)
 	case model.RegisterMesType:
 		// 处理注册
+		var registermes model.RegisterMes
+		json.Unmarshal([]byte(mes.Data), &registermes)
 		up := &UserProcess{
 			C: this.C,
+			UserId: registermes.User.UserId,
 		}
 		up.SeverProcessRegister(mes)
 	case model.SmsMesType:
